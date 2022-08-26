@@ -1,4 +1,5 @@
-import { BaseEntity, PrimaryColumn, Entity, In } from "typeorm";
+import { BaseEntity, PrimaryColumn, Entity, Like } from "typeorm";
+import { safeFilter } from "~/helpers";
 
 @Entity()
 export class Dodgy extends BaseEntity {
@@ -6,18 +7,16 @@ export class Dodgy extends BaseEntity {
     psn: string;
 
     static async checkMany(friends: string[]): Promise<string[]> {
-        const dodgy = await this.find({
-            where: { psn: In(friends) },
-        });
+        const dodgy = await Promise.all(
+            friends.map((friend) => this.checkOne(friend)),
+        );
 
-        console.log("dodgy", dodgy);
-
-        return (dodgy ?? []).map(({ psn }) => psn);
+        return safeFilter(dodgy).map(({ psn }) => psn);
     }
 
-    static async checkOne(psn: string): Promise<boolean> {
-        const dodgy = await this.findOne({ where: { psn } });
+    static async checkOne(psn: string): Promise<Dodgy | null> {
+        const dodgy = await this.findOne({ where: { psn: Like(psn) } });
 
-        return Boolean(dodgy);
+        return dodgy;
     }
 }
