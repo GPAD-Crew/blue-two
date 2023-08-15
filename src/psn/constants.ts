@@ -1,5 +1,3 @@
-import { env } from "~/helpers";
-
 export const USER_URL =
     "https://nl-prof.np.community.playstation.net/userProfile/v1/users";
 
@@ -14,10 +12,10 @@ export const AUTH_ACCESS_BODY = {
     client_secret: "xSk2YI8qJqZfeLQv",
 } as any;
 
-export const AUTH_REFRESH_BODY = {
-    authentication_type: "password_gating",
-    password: env.PSN_PASSWORD,
-    client_id,
-};
+// export const AUTH_REFRESH_BODY = {
+//     authentication_type: "password_gating",
+//     password: env.PSN_PASSWORD,
+//     client_id,
+// };
 
 export const FRIENDS_LIMIT = 500;
