@@ -1,22 +1,18 @@
 import { config } from "dotenv";
 
 interface Environment {
-    PSN_PASSWORD: string;
     POSTGRES: string;
-    PORT: number;
+    PORT?: number;
     DEV: boolean;
 }
 
 const env = {
+    ...process.env,
     ...config().parsed,
     DEV: process.env.NODE_ENV !== "production",
 } as unknown as Environment;
 
-const required: (keyof Environment | null)[] = [
-    "PSN_PASSWORD",
-    "PORT",
-    env.DEV ? null : "POSTGRES",
-];
+const required: (keyof Environment | null)[] = [env.DEV ? null : "POSTGRES"];
 
 const missing = required.filter((key) => key && !env[key]);
 

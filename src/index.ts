@@ -1,4 +1,4 @@
 import "module-alias/register";
-import "./server";
 import { ensureConnection } from "./db";
-ensureConnection();
+
+ensureConnection().then(() => import("./server"));
