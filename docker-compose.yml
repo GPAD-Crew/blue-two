@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  blue-two:
+    container_name: blue-two
+    build: .
+    restart: unless-stopped
+    networks: 
+      - gpad
+    environment:
+        NODE_ENV: "production"
+        PORT: 3002
+        POSTGRES: "http://gpad:gpad@db:5432"
+
+networks:
+    gpad:
+      external: true
