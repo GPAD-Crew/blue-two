@@ -43,10 +43,6 @@ server.get("/check/:userid", validatePSN, async (req, res) => {
     try {
         const isDodgy = Boolean(await Dodgy.checkOne(userid));
 
-        if (isDodgy) {
-            throw `is dodgy`;
-        }
-
         const friends = await getFriends(userid);
         const dodgy = await Dodgy.checkMany(friends);
 
