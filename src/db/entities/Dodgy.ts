@@ -1,10 +1,13 @@
-import { BaseEntity, PrimaryColumn, Entity, Like } from "typeorm";
+import { BaseEntity, PrimaryColumn, Entity, Like, Column } from "typeorm";
 import { safeFilter } from "~/helpers";
 
 @Entity()
 export class Dodgy extends BaseEntity {
     @PrimaryColumn()
     psn: string;
+
+    @Column()
+    lastCheck: Date;
 
     static async checkMany(friends: string[]): Promise<string[]> {
         const dodgy = await Promise.all(
