@@ -1,41 +1,16 @@
-import express, { RequestHandler } from "express";
+import express from "express";
 import { DateTime, Duration } from "luxon";
 import { getAccess, getRefresh, nearExpiry, saveRefresh } from "~/auth";
 import { Dodgy } from "~/db/entities";
 import { env } from "~/helpers";
 import { getCurrentOnlineId, getFriends } from "~/psn";
+import { dodgy } from "./dodgy";
+import { validatePSN } from "./validatePSN";
 const server = express();
 
 server.use(express.json());
 
-const validatePSN: RequestHandler = (req, res, next) => {
-    const { userid } = req.params;
-
-    /* 
-        must start with a letter
-        contain only letters, numbers, underscore, hyphen
-        3-16 chars long
-    */
-
-    const VALID_PSN = /^[a-zA-Z]{1,1}[a-zA-Z0-9_-]{2,15}$/;
-
-    if (!VALID_PSN.test(userid)) {
-        return res.status(400).json({ error: "Invalid PSN provided [server]" });
-    }
-
-    next();
-};
-
-server.get("/friends/:userid", validatePSN, async (req, res) => {
-    const { userid } = req.params;
-
-    try {
-        const friends = await getFriends(userid);
-        res.json({ friends });
-    } catch (error) {
-        res.status(500).json({ error });
-    }
-});
+server.use("/dodgy", dodgy);
 
 server.get("/check/:userid", validatePSN, async (req, res) => {
     const { userid } = req.params;
